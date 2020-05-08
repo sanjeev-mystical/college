@@ -33,7 +33,7 @@ from urllib.parse import urlparse, urlunparse
 
 
 
-@login_required
+@login_required(login_url='/signup')
 def database_function(request, event_type):
     if request.method == 'POST':
         data = database_form(request.POST)
@@ -84,11 +84,11 @@ def login_user(request):
                 username=request.POST.get('username'),
                 password=request.POST.get('password')
             )
-        login(request, user)
-        return render(request, 'index.html')
-    else:
-        return HttpResponse("Error") 
-
+        if request.user.is_authenticated:
+            # login(request, user)
+            return render(request, 'index.html')
+        return render(request,"404.html")
+    
 def signup(request):
     if request.method == 'POST':
         form = Regforms(request.POST)
